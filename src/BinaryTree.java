@@ -199,13 +199,59 @@ public class BinaryTree {
         this.root = this.insert(this.root, key, value);
     }
 
-    public Node insert(Node node, int key, String value) {
+    private Node insert(Node node, int key, String value) {
         if (node == null) {
             node = new Node(key, value);
         } else if (key < node.getKey()) {
             node.setLeft(this.insert(node.getLeft(), key, value));
         } else if (key > node.getKey()) {
             node.setRight(this.insert(node.getRight(), key, value));
+        }
+
+        return node;
+    }
+
+    public Node delete(int key) {
+        return this.delete(this.root, key);
+    }
+
+    private Node delete(Node node, int key) {
+        if (node == null) {
+            return null;
+        }
+
+        if (key < node.getKey()) {
+            node.setLeft(this.delete(node.getLeft(), key));
+        } else if (key > node.getKey()) {
+            node.setRight(this.delete(node.getRight(), key));
+        } else {
+            // Caso 1
+            if (node.getLeft() == null && node.getRight() == null) {
+                node = null;
+            }
+            // Caso 2
+            else if (node.getLeft() == null) {
+                Node aux = node;
+                node = aux.getRight();
+                aux = null;
+            } else if (node.getRight() == null) {
+                Node aux = node;
+                node = aux.getLeft();
+                aux = null;
+            }
+            // Caso 3
+            else {
+                Node aux = node.getLeft();
+
+                while (aux.getRight() != null) {
+                    aux = aux.getRight();
+                }
+
+                node.setKey(aux.getKey());
+                aux.setKey(key);
+                Node r = this.delete(node.getLeft(), aux.getKey());
+                node.setLeft(r);
+            }
         }
 
         return node;
