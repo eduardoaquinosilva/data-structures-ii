@@ -1,19 +1,5 @@
 public class Main {
     public static void main(String[] args) {
-        /* Node node9 = new Node(16, "Cocada");
-        Node node8 = new Node(10, "Chilito");
-        Node node7 = new Node(7, "Copo");
-        
-        Node node6 = new Node(17, "Caneta", node9, null);
-        Node node5 = new Node(9, "Corretivo", node7, node8);
-        Node node4 = new Node(4, "Apontador");
-
-        Node node3 = new Node(13, "Caderno", null, node6);
-        Node node2 = new Node(6, "Borracha", node4, node5);
-        
-        Node node1 = new Node(11, "Lápis", node2, node3);
-
-        BinaryTree binaryTree = new BinaryTree(node1); */
         BinaryTree binaryTree = new BinaryTree();
         binaryTree.insert(11, "Lápis");
         binaryTree.insert(6, "Borracha");
@@ -60,5 +46,11 @@ public class Main {
         } else {
             System.out.println("Chave não encontrada!");
         }
+
+        System.out.println("\nTotal de nós: " + binaryTree.countNodes());
+
+        System.out.println("\nTotal de folhas: " + binaryTree.countLeaves());
+
+        System.out.println("\nTotal de nós internos: " + binaryTree.countInternalNodes());
     }
 }

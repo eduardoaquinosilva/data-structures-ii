@@ -256,4 +256,56 @@ public class BinaryTree {
 
         return node;
     }
+
+    public int countNodes() {
+        return this.countNodes(this.getRoot());
+    }
+
+    private int countNodes(Node node) {
+        if (node == null) {
+            return 0;
+        }
+
+        return 1 + this.countNodes(node.getLeft()) + this.countNodes(node.getRight());
+    }
+
+    public int countLeaves() {
+        return this.countLeaves(this.getRoot());
+    }
+
+    private int countLeaves(Node node) {
+        if (node == null) {
+            return 0;
+        }
+        
+        if (node.getLeft() == null && node.getRight() == null) {
+            return 1;
+        }
+
+        return this.countLeaves(node.getLeft()) + this.countLeaves(node.getRight());
+    }
+
+    public int countInternalNodes() {
+        if (this.getRoot() == null) {
+            return 0;
+        }
+
+        return this.countInternalNodes(this.getRoot()) + 1;
+    }
+
+    private int countInternalNodes(Node node) {
+        if (node == null) {
+            return 0;
+        }
+
+        if (node.getLeft() == null && node.getRight() == null) {
+            return 0;
+        }
+
+        if (node.getLeft() == null || node.getRight() == null) {
+            return 1;
+        }
+
+        return 1 + this.countInternalNodes(node.getLeft()) + this.countInternalNodes(node.getRight());
+    }
 }
