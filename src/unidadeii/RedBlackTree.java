@@ -70,7 +70,7 @@ public class RedBlackTree {
                 u = v.getParent().getParent().getLeft();
 
                 // If uncle u is red
-                if (u.getColor() == 1) {
+                if (u != null && u.getColor() == 1) {
                     // Uncle u changes color to black
                     u.setColor(0);
                     // Parent w changes color to black
@@ -106,7 +106,7 @@ public class RedBlackTree {
                 u = v.getParent().getParent().getRight();
 
                 // If the uncle u is red
-                if (u.getColor() == 1) {
+                if (u != null && u.getColor() == 1) {
                     // Uncle changes to black
                     u.setColor(0);
                     // Parent w changes to black
@@ -152,8 +152,7 @@ public class RedBlackTree {
         x.setLeft(y.getRight());
 
         // If y's right subtree is not null, updates its parent to be x.
-        if (y.getRight() != null)
-            y.getRight().setParent(x);
+        if (y.getRight() != null) y.getRight().setParent(x);
         
         // The new parent of y becomes the original parent of x.
         y.setParent(x.getParent());
