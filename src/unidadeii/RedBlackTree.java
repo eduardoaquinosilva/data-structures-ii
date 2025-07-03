@@ -2,15 +2,35 @@ package unidadeii;
 
 public class RedBlackTree {
     private RedBlackTreeNode root;
+    final private RedBlackTreeNode nullNode;
 
     public RedBlackTree()
     {
+        this.nullNode = new RedBlackTreeNode(0);
+        this.nullNode.setColor(0);  // Null node is always black
         this.root = null;
     }
 
     public RedBlackTree(RedBlackTreeNode node)
     {
+        this.nullNode = new RedBlackTreeNode(0);
+        this.nullNode.setColor(0);  // Null node is always black
         this.root = node;
+    }
+
+    public void inOrder()
+    {
+        this.inOrder(this.root);
+    }
+
+    private void inOrder(RedBlackTreeNode node)
+    {
+        if (node != null)
+        {
+            inOrder(node.getLeft());
+            System.out.print(node.getKey() + (node.getColor() == 0 ? "(P) " : "(V) "));
+            inOrder(node.getRight());
+        }
     }
 
     public void insert(int key)
@@ -141,6 +161,114 @@ public class RedBlackTree {
         }
 
         this.root.setColor(0);
+    }
+
+    public RedBlackTreeNode search(RedBlackTreeNode node, int key)
+    {
+        while (node != nullNode && key != node.getKey()) {
+            if (key < node.getKey()) {
+                node = node.getLeft();
+            } else {
+                node = node.getRight();
+            }
+        }
+
+        return node;
+    }
+
+    public void substitute(RedBlackTreeNode u, RedBlackTreeNode v)
+    {
+        if (u.getParent() == null) {
+            this.root = v;
+        } else if (u == u.getParent().getLeft()) {
+            u.getParent().setLeft(v);
+        } else {
+            u.getParent().setRight(v);
+        }
+
+        v.setParent(u.getParent());
+    }
+
+    private RedBlackTreeNode lowerKey(RedBlackTreeNode node)
+    {
+        while (node.getLeft() != nullNode) {
+            node = node.getLeft();
+        }
+
+        return node;
+    }
+
+    // Method to remove a node from the tree.
+    public void remove(int key)
+    {
+        // Searches for node with 'key' key in the tree, starting from root.
+        RedBlackTreeNode z = this.search(this.root, key);
+
+        // If the node is not found (z is null), print message and leave method.
+        if (z == nullNode) {
+            System.out.println("Nó não encontrado na árvore.");
+            return;
+        }
+
+        // y initially points to the node that will be removed (it might change later).
+        RedBlackTreeNode y = z;
+
+        // Stores the original color of the node that will be removed.
+        // This is important because if a black node is removed, it might violate the red black tree rules.
+        int yOriginalColor = y.getColor();
+        
+        // x is the node that will substitute y in the tree.
+        RedBlackTreeNode x;
+
+        // Case 1: z has no sons in the left. (only right sons or no sons)
+        if (z.getLeft() == nullNode) {
+            x = z.getRight();
+            // x points to the right son (it might be null)
+            this.substitute(z, z.getRight());
+            // Substitutes z by his right son
+        }
+        // Case 2: z has no sons in the right (only left sons or no sons)
+        else if (z.getRight() == nullNode) {
+            x = z.getLeft();
+            // x points to the left son
+            this.substitute(z, z.getLeft());
+            // Substitutes z by his left son
+        }
+        // Case 3: z has two sons
+        else {
+            // Finds z sucessor (lower value from z's right subtreee)
+            y = lowerKey(z.getRight());
+
+            // Stores the sucessor's original color
+            yOriginalColor = y.getColor();
+
+            // x will be y's right son (it might be null)
+            x = y.getRight();
+
+            // If the sucessor y is a direct son of z...
+            if (y.getParent() == z) {
+                // ... then updates the parent from x to y ( x might be null)
+                x.setParent(y);
+            }
+            // If y is not a direct son of z...
+            else {
+                // Substitutes y by its right son (x), because y will be moved to the z position
+                this.substitute(y, y.getRight());
+
+                // Connects y with z's right subtree
+                y.setRight(z.getRight());
+                y.getRight().setParent(y);
+            }
+
+            // Substitutes z by y int z's original position
+            this.substitute(z, y);
+
+            // Connects y with z's left subtree.
+            y.setLeft(z.getLeft());
+            y.getLeft().setParent(y);
+
+            // Copies z's color to y, because y places his position and must keep the structure
+        }
     }
 
     private void rightRotate(RedBlackTreeNode x)

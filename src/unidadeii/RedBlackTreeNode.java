@@ -1,10 +1,20 @@
 package unidadeii;
 
 public class RedBlackTreeNode {
-    private int key, color;
+    private int key;
+    private int color;  // 1 for red, 0 for black
     private RedBlackTreeNode parent, left, right;
 
     public RedBlackTreeNode() {}
+
+    public RedBlackTreeNode(int key)
+    {
+        this.key = key;
+        this.color = 1;  // New node is red in standard
+        this.left = null;
+        this.right = null;
+        this.parent = null;
+    }
 
     public int getKey() {
         return key;
