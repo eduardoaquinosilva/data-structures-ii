@@ -268,7 +268,79 @@ public class RedBlackTree {
             y.getLeft().setParent(y);
 
             // Copies z's color to y, because y places his position and must keep the structure
+            y.setColor(z.getColor());
         }
+
+        // If the efectively removed node (y) was black, it could have violated the red-black tree rules
+        if (yOriginalColor == 0) {
+            // Fix the tree from the node x.
+            this.fixRemove(x);
+        }
+    }
+
+    // Method to fix the tree after removing
+    private void fixRemove(RedBlackTreeNode x)
+    {
+        while (x != this.root && x.getColor() == 0) {
+            if (x == x.getParent().getLeft()) {
+                RedBlackTreeNode brother = x.getParent().getRight();
+
+                // Case 1: Brother is red.
+                if (brother.getColor() == 1) {
+                    brother.setColor(0);
+                    x.getParent().setColor(1);
+                    this.leftRotate(x.getParent());
+                    brother = x.getParent().getRight();
+                }
+                // Case 2: brother and sons are black
+                if (brother.getLeft().getColor() == 0 && brother.getRight().getColor() == 0) {
+                    brother.setColor(1);
+                    x = x.getParent();
+                } else {
+                    // Case 3: Brother is black and right son is black
+                    if (brother.getRight().getColor() == 0) {
+                        brother.getLeft().setColor(1);
+                        this.rightRotate(brother);
+                        brother = x.getParent().getRight();
+                    }
+                    // Case 4: Brother is black and right son is red
+                    brother.setColor(x.getParent().getColor());
+                    x.getParent().setColor(0);
+                    brother.getRight().setColor(0);
+                    this.leftRotate(x.getParent());
+                    x = this.root;
+                }
+            } else {
+                RedBlackTreeNode brother = x.getParent().getLeft();
+
+                if (brother.getColor() == 1) {
+                    brother.setColor(0);
+                    x.getParent().setColor(1);
+                    this.rightRotate(x.getParent());
+                    brother = x.getParent().getLeft();
+                }
+
+                if (brother.getRight().getColor() == 0 && brother.getLeft().getColor() == 0) {
+                    brother.setColor(1);
+                    x = x.getParent();
+                } else {
+                    if (brother.getLeft().getColor() == 0) {
+                        brother.getRight().setColor(0);
+                        brother.setColor(1);
+                        this.leftRotate(brother);
+                        brother = x.getParent().getLeft();
+                    }
+
+                    brother.setColor(x.getParent().getColor());
+                    x.getParent().setColor(0);
+                    brother.getLeft().setColor(0);
+                    this.rightRotate(x.getParent());
+                    x = this.root;
+                }
+            }
+        }
+
+        x.setColor(0);
     }
 
     private void rightRotate(RedBlackTreeNode x)
